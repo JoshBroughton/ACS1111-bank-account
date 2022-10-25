@@ -43,7 +43,7 @@ class BankAccount:
         
     def get_balance(self):
         """prints and returns the current balance of the account"""
-        print(f'The current balance of this account is {self.balance}')
+        print(f'The current balance of this account is ${self.balance}')
         return self.balance
 
     def print_statement(self):
@@ -54,7 +54,13 @@ class BankAccount:
     def get_redacted_account_number(self):
         """returns the account number with the first four digits redacted and replaced with ****,
         e.g. 12345678 -> ****5678"""
-        account_number = self.account_number
-        for i in range(4):
-            account_number[i] = '*'
+        account_number = str(self.account_number)
+        account_number = '****' + account_number[4:8]
         return account_number
+
+josh_account = BankAccount('Josh Broughton', [])
+josh_account.deposit(400)
+josh_account.withdraw(200)
+josh_account.withdraw(300)
+josh_account.get_balance()
+josh_account.print_statement()
