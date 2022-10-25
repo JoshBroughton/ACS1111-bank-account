@@ -53,6 +53,13 @@ class BankAccount:
         print(f'The current balance of this account is ${self.balance}')
         return self.balance
 
+    def add_interest(self):
+        """adds interest at a rate of 1% annually, compounded monthly (0.083% per month). This function adds
+        one month worth of interest"""
+        interest = self.balance * 0.0083
+        self.balance += interest
+        print(f'Added interest. New account balance is {self.balance}')
+
     def print_statement(self):
         """prints a statement message with account name, number, and balance"""
         statement_string = f'{self.full_name}\nAccount No.: {self.get_redacted_account_number()}\nBalance: ${self.balance}'
@@ -73,3 +80,4 @@ josh_account.get_balance()
 josh_account.print_statement()
 josh_account.assign_account_number(12345678)
 josh_account.print_statement()
+josh_account.add_interest()
