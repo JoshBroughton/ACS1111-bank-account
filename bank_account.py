@@ -1,6 +1,10 @@
 from random import randint
 
 class BankAccount:
+    """Defines a BankAccount class, which represents a generic bank account. Includes 
+    attributes for full name of account holder, account number, and balance. Includes 
+    methods to generate a random account number, assign a manual account number, 
+    deposit, withdraw, and view a statement of account."""
     def __init__(self, full_name, account_numbers, overdraft_fee=10):
         self.full_name = full_name
         self.account_number = self.generate_account_number(account_numbers)
@@ -19,6 +23,10 @@ class BankAccount:
             else:
                 unique_account_number = True
                 return new_account_number
+
+    def assign_account_number(self, account_number):
+        """allows manual overide of the randomly generated account number to account_number"""
+        self.account_number = account_number
 
     def deposit(self, amount):
         """adds amount to the balance of the account, and prints a confirmation message"""
@@ -40,7 +48,6 @@ class BankAccount:
                 self.balance -= self.overdraft_fee
                 print(f'Insufficient funds. ${self.overdraft_fee} overdraft fee charged.')
 
-        
     def get_balance(self):
         """prints and returns the current balance of the account"""
         print(f'The current balance of this account is ${self.balance}')
@@ -63,4 +70,6 @@ josh_account.deposit(400)
 josh_account.withdraw(200)
 josh_account.withdraw(300)
 josh_account.get_balance()
+josh_account.print_statement()
+josh_account.assign_account_number(12345678)
 josh_account.print_statement()
