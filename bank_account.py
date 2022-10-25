@@ -53,7 +53,7 @@ class BankAccount:
 
     def get_balance(self):
         """prints and returns the current balance of the account"""
-        print(f'The current balance of this account is ${self.balance}')
+        print(f'The current balance of the account belong to {self.full_name} is ${self.balance}')
         return self.balance
 
     def add_interest(self):
@@ -80,12 +80,31 @@ class BankAccount:
         account_number = '****' + account_number[4:8]
         return account_number
 
-accounts= []
+# list to store account numbers to prevent duplicates
+accounts = []
 josh_account = BankAccount('Josh Broughton', accounts)
 accounts.append(josh_account.get_account_number())
 mitchell_account = BankAccount('Mitchell', accounts)
 mitchell_account.assign_account_number('03141592')
-josh_account.deposit(1000.555555555)
+accounts.append(mitchell_account.get_account_number())
+broke_account = BankAccount('Some Person', accounts)
+accounts.append(broke_account.get_account_number())
+
+# part 6 of assignment, using methods on Mitchell's account
+mitchell_account.deposit(400000)
+mitchell_account.print_statement()
+mitchell_account.add_interest()
+mitchell_account.print_statement()
+mitchell_account.withdraw(150)
+mitchell_account.print_statement()
+
+# examples of other methods working
+broke_account.deposit(3.99)
+broke_account.get_balance()
+broke_account.withdraw(10)
+broke_account.print_statement()
+broke_account.add_interest()
+josh_account.deposit(1000000)
+josh_account.print_statement()
 josh_account.add_interest()
-
-
+josh_account.get_balance()
