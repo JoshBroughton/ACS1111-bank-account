@@ -1,4 +1,5 @@
 from random import randint
+from tkinter import MITER
 
 class BankAccount:
     """Defines a BankAccount class, which represents a generic bank account. Includes 
@@ -17,7 +18,8 @@ class BankAccount:
         a unique account number (one not already in this list) is found"""
         unique_account_number = False
         while not unique_account_number:
-            new_account_number = randint(10000000, 99999999)
+            new_account_number = randint(0, 99999999)
+            new_account_number = str(new_account_number).rjust(8, '0')
             if new_account_number in account_numbers:
                 unique_account_number = False
             else:
@@ -54,8 +56,8 @@ class BankAccount:
         return self.balance
 
     def add_interest(self):
-        """adds interest at a rate of 1% annually, compounded monthly (0.083% per month). This function adds
-        one month worth of interest"""
+        """adds interest at a rate of 1% annually, compounded monthly (0.083% per month). 
+        This function adds one month worth of interest"""
         interest = self.balance * 0.0083
         self.balance += interest
         print(f'Added interest. New account balance is {self.balance}')
@@ -65,19 +67,26 @@ class BankAccount:
         statement_string = f'{self.full_name}\nAccount No.: {self.get_redacted_account_number()}\nBalance: ${self.balance}'
         print(statement_string)
 
+    def get_account_number(self):
+        """returns the full account number"""
+        return self.account_number
+
     def get_redacted_account_number(self):
         """returns the account number with the first four digits redacted and replaced with ****,
         e.g. 12345678 -> ****5678"""
-        account_number = str(self.account_number)
+        account_number = self.account_number
         account_number = '****' + account_number[4:8]
         return account_number
 
-josh_account = BankAccount('Josh Broughton', [])
+account_numbers = []
+josh_account = BankAccount('Josh Broughton', account_numbers)
+account_numbers.append(josh_account.get_account_number())
+mitchell_account = BankAccount('Mitchell', account_numbers)
+mitchell_account.assign_account_number('03141592')
 josh_account.deposit(400)
 josh_account.withdraw(200)
 josh_account.withdraw(300)
 josh_account.get_balance()
-josh_account.print_statement()
-josh_account.assign_account_number(12345678)
-josh_account.print_statement()
 josh_account.add_interest()
+josh_account.print_statement()
+mitchell_account.print_statement()
