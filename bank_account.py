@@ -1,3 +1,5 @@
+"""bank_account.py defines classes for BankAccount and Bank objects, incluidng common
+banking operations"""
 from random import randint
 
 class BankAccount:
@@ -66,7 +68,7 @@ class BankAccount:
         return self.balance
 
     def add_interest(self):
-        """adds interest at a rate of 1% annually, compounded monthly (0.083% per month). 
+        """adds interest at a rate of 1% annually, compounded monthly (0.083% per month).
         This function adds one month worth of interest"""
         interest = self.balance * (self.interest_rate / 100 / 12)
         interest = round(interest, 2)
@@ -75,7 +77,9 @@ class BankAccount:
 
     def print_statement(self):
         """prints a statement message with account name, number, and balance"""
-        statement_string = f'{self.full_name}\nAccount No.: {self.get_redacted_account_number()}\nBalance: ${self.balance}'
+        statement_string = (f'{self.full_name}\nAccount No.:'
+                            f'{self.get_redacted_account_number()}'
+                            f'\nBalance: ${self.balance}')
         print(statement_string)
 
     def get_account_number(self):
@@ -88,6 +92,71 @@ class BankAccount:
         account_number = self.account_number
         account_number = '****' + account_number[4:8]
         return account_number
+
+
+class Bank:
+    """Bank class, which manages a list of BankAccount objects"""
+    def __init__(self):
+        self.account_list = []
+
+    def create_account(self, full_name, is_savings_account=False, overdraft_fee=10):
+        """creates a new BankAccount instance and adds it to account_list"""
+        self.account_list.append(BankAccount(
+            full_name,
+            self.account_list,
+            is_savings_account,
+            overdraft_fee
+            ))
+
+    def get_account(self, account_num):
+        """returns the account object from account_list with account
+        number account_num if it exists, otherwise returns None"""
+        for account in self.account_list:
+            if account.account_number == account_num:
+                return account
+        return None
+
+    def deposit(self, amount, account_num):
+        """deposits amount to account with account number account_num"""
+        account = self.get_account(account_num)
+        if isinstance(account, BankAccount):
+            account.deposit(amount)
+        else:
+            print('Deposit could not be made.')
+
+    def withdraw(self, amount, account_num):
+        """withdraws amount from the account with account number account_num"""
+        account = self.get_account(account_num)
+        if isinstance(account, BankAccount):
+            account.withdraw(amount)
+        else:
+            print('Withdrawal could not be made.')
+
+    def transfer(self, amount, from_account_num, to_account_num):
+        """transfers amount from from_account to to_account"""
+        from_account = self.get_account(from_account_num)
+        to_account = self.get_account(to_account_num)
+        # ensure both accounts exist in the list before altering balance of either
+        if isinstance(from_account, BankAccount) and isinstance(to_account, BankAccount):
+            from_account.withdraw(amount)
+            to_account.deposit(amount)
+        else:
+            print('Transfer could not be made.')
+
+    def add_monthly_interest(self):
+        """adds monthly interest to all accounts in the Bank"""
+        for account in self.account_list:
+            account.add_interest()
+
+    def statement(self, account_num):
+        """prints a statement for the account with the given account_num
+        or prints an error message if account does not exist"""
+        account = self.get_account(account_num)
+        if isinstance(account, BankAccount):
+            account.print_statement()
+        else:
+            print('Statement could not be printed')
+
 
 # list to store account numbers to prevent duplicates
 accounts = []
