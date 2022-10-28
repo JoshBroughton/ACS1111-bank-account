@@ -5,12 +5,13 @@ class BankAccount:
     attributes for full name of account holder, account number, and balance. Includes
     methods to generate a random account number, assign a manual account number,
     deposit, withdraw, and view a statement of account."""
-    def __init__(self, full_name, account_numbers, overdraft_fee=10):
+    def __init__(self, full_name, account_numbers, is_savings_account=False, overdraft_fee=10):
         self.full_name = full_name
         self.account_number = self.generate_account_number(account_numbers)
         self.balance = 0
         self.overdraft_fee = overdraft_fee
-        self.interest_rate = 1
+        self.is_savings_account = is_savings_account
+        self.interest_rate = self.set_interest_rate()
 
     def generate_account_number(self, account_numbers):
         """Generates and assigns a random 8-digit account number to the account.
@@ -26,6 +27,14 @@ class BankAccount:
             else:
                 unique_account_number = True
                 return new_account_number
+
+    def set_interest_rate(self):
+        """Sets the interest rate of the account based on the account type. Called in the
+        constructor."""
+        if self.is_savings_account is True:
+            return 1.2
+        else:
+            return 1.0
 
     def assign_account_number(self, account_number):
         """allows manual overide of the randomly generated account number to account_number"""
@@ -82,7 +91,7 @@ class BankAccount:
 
 # list to store account numbers to prevent duplicates
 accounts = []
-josh_account = BankAccount('Josh Broughton', accounts)
+josh_account = BankAccount('Josh Broughton', accounts, True)
 accounts.append(josh_account.get_account_number())
 mitchell_account = BankAccount('Mitchell', accounts)
 mitchell_account.assign_account_number('03141592')
@@ -99,9 +108,8 @@ mitchell_account.withdraw(150)
 mitchell_account.print_statement()
 
 # examples of other methods working
-broke_account.deposit(3.99)
+broke_account.deposit(100)
 broke_account.get_balance()
-broke_account.withdraw(10)
 broke_account.print_statement()
 broke_account.add_interest()
 josh_account.deposit(1000000)
