@@ -22,6 +22,7 @@ class BankAccount:
         unique_account_number = False
         while not unique_account_number:
             new_account_number = randint(0, 99999999)
+            # fills acounts to 8 digits with leading zeros
             new_account_number = str(new_account_number).rjust(8, '0')
             if new_account_number in account_numbers:
                 unique_account_number = False
@@ -157,31 +158,56 @@ class Bank:
         else:
             print('Statement could not be printed')
 
+    def print_statements(self):
+        """prints out statements for all accounts currently in the bank"""
+        for account in self.account_list:
+            account.print_statement()
+ 
+    def get_account_number(self, name):
+        """returns the account number for account with full_name. in real
+        application would need to have other authorization (password) and handle
+        non-unique names; this method exists mostly to test the other methods."""
+        for account in self.account_list:
+            if account.full_name == name:
+                return account.account_number
 
-# list to store account numbers to prevent duplicates
-accounts = []
-josh_account = BankAccount('Josh Broughton', accounts, True)
-accounts.append(josh_account.get_account_number())
-mitchell_account = BankAccount('Mitchell', accounts)
-mitchell_account.assign_account_number('03141592')
-accounts.append(mitchell_account.get_account_number())
-broke_account = BankAccount('Some Person', accounts)
-accounts.append(broke_account.get_account_number())
+bank = Bank()
+bank.create_account('Josh Broughton')
+bank.create_account('Some Person', True)
+bank.create_account('Broke Person')
 
-# part 6 of assignment, using methods on Mitchell's account
-mitchell_account.deposit(400000)
-mitchell_account.print_statement()
-mitchell_account.add_interest()
-mitchell_account.print_statement()
-mitchell_account.withdraw(150)
-mitchell_account.print_statement()
+josh_number = bank.get_account_number('Josh Broughton')
+some_number = bank.get_account_number('Some Person')
+broke_number = bank.get_account_number('Broke Person')
 
-# examples of other methods working
-broke_account.deposit(100)
-broke_account.get_balance()
-broke_account.print_statement()
-broke_account.add_interest()
-josh_account.deposit(1000000)
-josh_account.print_statement()
-josh_account.add_interest()
-josh_account.get_balance()
+#deposit some money to each account
+bank.deposit(1000, josh_number)
+bank.deposit(5000, some_number)
+bank.deposit(5, broke_number)
+
+#print one account statement
+bank.statement(josh_number)
+#error when attempting to print account that doesn't exist
+bank.statement('12345678')
+#print statement for all accounts
+bank.print_statements()
+#withdraw from an account
+bank.withdraw(1000, some_number)
+bank.statement(some_number)
+
+#overdraw from an account
+bank.withdraw(100, broke_number)
+bank.statement(broke_number)
+
+#transfer some money
+bank.transfer(1000, some_number, josh_number)
+bank.print_statements()
+
+#help a broke friend out
+bank.transfer(100, josh_number, broke_number)
+bank.print_statements()
+
+# add interest; expect some persons account to be treated as savings, 1.2% added
+# 1% added to others
+bank.add_monthly_interest()
+bank.print_statements()
